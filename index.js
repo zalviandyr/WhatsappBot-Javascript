@@ -1,12 +1,12 @@
-const wa = require("@open-wa/wa-automate")
-const yaml = require("js-yaml")
-const fs = require("fs")
+const wa = require('@open-wa/wa-automate')
+const yaml = require('js-yaml')
+const fs = require('fs')
 
 // my library
-const messageHandler = require("./lib/messageHandler")
+const messageHandler = require('./lib/messageHandler')
 
 // config
-const config = yaml.safeLoad(fs.readFileSync("./config.yml", "utf8"))
+const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
 
 const start = async (client, callback) => {
     // create delete path
@@ -25,13 +25,10 @@ const start = async (client, callback) => {
             await messageHandler(client, message)
         } else {
             // chat private for check status bot
-            if (message.from === config["ownerNumber"]) {
+            if (message.from === config.ownerNumber) {
                 await messageHandler(client, message)
             } else {
-                await client.sendText(
-                    message.from,
-                    "Berdua aja nih ? makasih, tidak terima curhat"
-                )
+                await client.sendText(message.from, 'Berdua aja nih ? makasih, tidak terima curhat',)
             }
         }
     })
@@ -40,11 +37,7 @@ const start = async (client, callback) => {
     await client.onAddedToGroup(async (chat) => {
         const groupMember = chat.groupMetadata.participants.length
         if (groupMember < 20) {
-            await client
-                .sendText(
-                    chat.id,
-                    "Cuman segini master ?\nminimal 20 dong, biar rame gtu"
-                )
+            await client.sendText(chat.id, 'Cuman segini master ?\nminimal 20 dong, biar rame gtu',)
                 .then(() => {
                     client.leaveGroup(chat.id)
                 })
@@ -54,20 +47,13 @@ const start = async (client, callback) => {
                 const allGroup = chats.length
                 // artinya hanya 3 group yn bisa ditangani
                 if (allGroup > 3) {
-                    await client
-                        .sendText(
-                            chat.id,
-                            "Mohon maaf tidak terima slot master,\nsaya dh puas dipake"
-                        )
+                    await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
                         .then(() => {
                             client.leaveGroup(chat.id)
                         })
                 } else {
                     // jika berhasil masuk
-                    await client.sendText(
-                        chat.id,
-                        `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`
-                    )
+                    await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
                 }
             })
         }
@@ -75,11 +61,7 @@ const start = async (client, callback) => {
 
     // listening on incoming call
     await client.onIncomingCall(async (call) => {
-        await client
-            .sendText(
-                call.peerJid,
-                "Maaf, aku tidak bisa diajak ginian\nblok yaaa~ ehe"
-            )
+        await client.sendText(call.peerJid, 'Maaf, aku tidak bisa diajak ginian\nblok yaaa~ ehe',)
             .then(() => {
                 client.contactBlock(call.peerJid)
             })
@@ -92,16 +74,16 @@ const start = async (client, callback) => {
  */
 function createDeletePath() {
     // delete path and recreate temp-media
-    fs.rmdirSync(config.path["tempMedia"], { recursive: true })
-    fs.mkdirSync(config.path["tempMedia"], { recursive: true })
+    fs.rmdirSync(config.path.tempMedia, {recursive: true})
+    fs.mkdirSync(config.path.tempMedia, {recursive: true})
 
     // create temp-media child directory
-    fs.mkdirSync(config.path["instagram"])
-    fs.mkdirSync(config.path["youtube"])
+    fs.mkdirSync(config.path.instagram)
+    fs.mkdirSync(config.path.youtube)
 
     // create json and log path, recursive to ignore error
-    fs.mkdirSync(config.path["json"], { recursive: true })
-    fs.mkdirSync(config.path["log"], { recursive: true })
+    fs.mkdirSync(config.path.json, {recursive: true})
+    fs.mkdirSync(config.path.log, {recursive: true})
 }
 
 wa.create({
