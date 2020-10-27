@@ -15,5 +15,5 @@ session.data.json
 storage/temp-media
 
 # media child file
-storage/json/*
-storage/log/*
+storage/json/
+storage/log/

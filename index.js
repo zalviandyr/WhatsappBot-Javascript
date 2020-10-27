@@ -83,6 +83,10 @@ function createDeletePath() {
     // create temp-media child directory
     fs.mkdirSync(config.path["instagram"])
     fs.mkdirSync(config.path["youtube"])
+
+    // create json and log path
+    fs.mkdirSync(config.path["json"])
+    fs.mkdirSync(config.path["log"])
 }
 
 wa.create(
