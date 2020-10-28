@@ -42,20 +42,22 @@ const start = async (client, callback) => {
                     client.leaveGroup(chat.id)
                 })
         } else {
+            await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
+            // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
-            await client.getAllGroups().then(async (chats) => {
-                const allGroup = chats.length
-                // artinya hanya 3 group yn bisa ditangani
-                if (allGroup > 3) {
-                    await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
-                        .then(() => {
-                            client.leaveGroup(chat.id)
-                        })
-                } else {
-                    // jika berhasil masuk
-                    await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
-                }
-            })
+            // await client.getAllGroups().then(async (chats) => {
+            //     const allGroup = chats.length
+            //     // artinya hanya 3 group yn bisa ditangani
+            //     if (allGroup > 3) {
+            //         await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
+            //             .then(() => {
+            //                 client.leaveGroup(chat.id)
+            //             })
+            //     } else {
+            //         // jika berhasil masuk
+            //         await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
+            //     }
+            // })
         }
     })
 
