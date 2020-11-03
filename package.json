@@ -16,8 +16,11 @@
   "dependencies": {
     "@juliendu11/instagram-downloader": "^0.2.0",
     "@k3rn31p4nic/google-translate-api": "^1.1.1",
-    "@open-wa/wa-automate": "^3.0.6",
+    "@open-wa/wa-automate": "^3.0.8",
     "@open-wa/wa-decrypt": "^2.0.1",
+    "akaneko": "^3.5.1",
+    "azlyrics-scraper": "^1.0.6",
+    "brainly-scraper": "^1.0.2",
     "cheerio": "^1.0.0-rc.3",
     "fbvideos": "^1.0.2",
     "fs": "0.0.1-security",
@@ -26,7 +29,6 @@
     "js-yaml": "^3.14.0",
     "node-fetch": "^2.6.1",
     "user-instagram": "^2.1.3",
-    "waifulabs": "^0.1.2",
     "ytdl-core": "^3.4.2"
   }
 }
