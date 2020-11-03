@@ -16,7 +16,7 @@
   "dependencies": {
     "@juliendu11/instagram-downloader": "^0.2.0",
     "@k3rn31p4nic/google-translate-api": "^1.1.1",
-    "@open-wa/wa-automate": "^3.0.6",
+    "@open-wa/wa-automate": "^3.0.8",
     "@open-wa/wa-decrypt": "^2.0.1",
     "akaneko": "^3.5.1",
     "azlyrics-scraper": "^1.0.6",
