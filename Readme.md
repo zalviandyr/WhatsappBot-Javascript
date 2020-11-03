@@ -4,7 +4,6 @@
 
 ```bash
 > npm i
-> npm start
 ```
 
 ## **Config:**
