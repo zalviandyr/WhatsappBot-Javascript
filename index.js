@@ -94,4 +94,5 @@ wa.create({
     // untuk kirim video set chrome exe
     useChrome: true,
     executablePath: config.path.chrome,
+    killProcessOnBrowserClose: true,
 }).then((client) => start(client, createDeletePath))
