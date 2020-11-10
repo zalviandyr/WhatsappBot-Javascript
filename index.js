@@ -36,6 +36,7 @@ const start = async (client, callback) => {
     // listening on added to group
     await client.onAddedToGroup(async (chat) => {
         const groupMember = chat.groupMetadata.participants.length
+        // todo ubah ke 10 participants
         if (groupMember < 20) {
             await client.sendText(chat.id, 'Cuman segini master ?\nminimal 20 dong, biar rame gtu',)
                 .then(() => {
