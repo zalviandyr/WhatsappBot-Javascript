@@ -2,8 +2,6 @@ userAgent: 'WhatsApp/2.2037.6 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) Ap
 # number phone for owner to able use another feature
 ownerNumber: '6289696133160@c.us'
 path:
-  chrome: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-  # jangan dihapus ini folder, media dan json berisi file-file penting
   media: './storage/media'
   json: './storage/json'
   log: './storage/log'

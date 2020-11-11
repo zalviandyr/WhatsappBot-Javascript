@@ -93,6 +93,8 @@ wa.create({
     restartOnCrash: start,
     // untuk kirim video set chrome exe
     useChrome: true,
-    executablePath: config.path.chrome,
     killProcessOnBrowserClose: true,
+    autoRefresh: true,
+    sessionId: 'inori'
+    // corsFix: true
 }).then((client) => start(client, createDeletePath))
