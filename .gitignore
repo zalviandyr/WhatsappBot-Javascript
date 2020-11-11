@@ -1,5 +1,6 @@
 .idea
 .vscode
+.node-persist
 
 # test and debug
 testing.js
@@ -11,6 +12,7 @@ package-lock.json
 
 # session data
 session.data.json
+inori.data.json
 
 # temp-media
 storage/temp-media
