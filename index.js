@@ -93,7 +93,6 @@ wa.create({
     restartOnCrash: start,
     // untuk kirim video set chrome exe
     useChrome: true,
-    killProcessOnBrowserClose: true,
     autoRefresh: true,
     sessionId: 'inori'
     // corsFix: true
