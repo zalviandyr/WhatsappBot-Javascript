@@ -4,7 +4,9 @@ const fs = require('fs')
 
 // my library
 const messageHandler = require('./lib/messageHandler')
-const {filePath} = require('./lib/helpers')
+const messageResponse = require('./lib/messageResponse')
+const functionResponse = require('./lib/functionResponse')
+const {filePath, authorization, optionValue} = require('./lib/helpers')
 
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
@@ -23,13 +25,30 @@ const start = async (client) => {
 
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
-            await messageHandler(client, message)
+            // check state
+            authorization.checkState(client, message)
+                .then(async (state) => {
+                    if (state === optionValue.state.started) {
+                        await messageHandler(client, message)
+                    } else {
+                        await client.reply(message.from, messageResponse.state.paused, message.id)
+                    }
+                })
+                .catch(async (err) => {
+                    if (err) {
+                        await client.reply(message.from, messageResponse.state.notRegistered, message.id)
+                    } else {
+                        const messages = message.body.split(' ')
+                        const args = messages.slice(1, messages.length)
+                        await functionResponse.request(client, message, args)
+                    }
+                })
         } else {
             // chat private for check status bot
             if (message.from === config.ownerNumber) {
                 await messageHandler(client, message)
             } else {
-                await client.sendText(message.from, 'Berdua aja nih ? makasih, tidak terima curhat',)
+                await client.sendText(message.from, messageResponse.privateMessage)
             }
         }
     })
@@ -39,7 +58,7 @@ const start = async (client) => {
         const groupMember = chat.groupMetadata.participants.length
         // todo ubah ke 10 participants
         if (groupMember < 20) {
-            await client.sendText(chat.id, 'Cuman segini master ?\nminimal 20 dong, biar rame gtu',)
+            await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
                 .then(() => {
                     client.leaveGroup(chat.id)
                 })
@@ -65,7 +84,7 @@ const start = async (client) => {
 
     // listening on incoming call
     await client.onIncomingCall(async (call) => {
-        await client.sendText(call.peerJid, 'Maaf, aku tidak bisa diajak ginian\nblok yaaa~ ehe',)
+        await client.sendText(call.peerJid, messageResponse.incomingCall)
             .then(() => {
                 client.contactBlock(call.peerJid)
             })
