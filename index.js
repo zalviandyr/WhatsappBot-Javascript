@@ -4,6 +4,7 @@ const fs = require('fs')
 
 // my library
 const messageHandler = require('./lib/messageHandler')
+const {filePath} = require('./lib/helpers')
 
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
@@ -77,16 +78,16 @@ const start = async (client, callback) => {
  */
 function createDeletePath() {
     // delete path and recreate temp-media
-    fs.rmdirSync(config.path.tempMedia, {recursive: true})
-    fs.mkdirSync(config.path.tempMedia, {recursive: true})
+    fs.rmdirSync(filePath.tempMedia.base, {recursive: true})
+    fs.mkdirSync(filePath.tempMedia.base, {recursive: true})
 
     // create temp-media child directory
-    fs.mkdirSync(config.path.instagram)
-    fs.mkdirSync(config.path.youtube)
+    fs.mkdirSync(filePath.tempMedia.instagram)
+    fs.mkdirSync(filePath.tempMedia.youtube)
 
     // create json and log path, recursive to ignore error
-    fs.mkdirSync(config.path.json, {recursive: true})
-    fs.mkdirSync(config.path.log, {recursive: true})
+    fs.mkdirSync(filePath.json.base, {recursive: true})
+    fs.mkdirSync(filePath.log.base, {recursive: true})
 }
 
 wa.create({
