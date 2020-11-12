@@ -9,9 +9,9 @@ const {filePath} = require('./lib/helpers')
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
 
-const start = async (client, callback) => {
+const start = async (client) => {
     // create delete path
-    callback()
+    createDeletePath()
 
     // listening a messages
     await client.onMessage(async (message) => {
@@ -96,5 +96,4 @@ wa.create({
     useChrome: true,
     autoRefresh: true,
     sessionId: 'inori'
-    // corsFix: true
-}).then((client) => start(client, createDeletePath))
+}).then((client) => start(client))
