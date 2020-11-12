@@ -6,7 +6,7 @@ const fs = require('fs')
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
 const functionResponse = require('./lib/functionResponse')
-const {filePath, authorization, optionValue} = require('./lib/helpers')
+const {filePath, authorization, stringValues} = require('./lib/helpers')
 
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
@@ -28,7 +28,7 @@ const start = async (client) => {
             // check state
             authorization.checkState(client, message)
                 .then(async (state) => {
-                    if (state === optionValue.state.started) {
+                    if (state === stringValues.state.started) {
                         await messageHandler(client, message)
                     } else {
                         await client.reply(message.from, messageResponse.state.paused, message.id)
