@@ -6,7 +6,8 @@ const fs = require('fs')
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
 const functionResponse = require('./lib/functionResponse')
-const {filePath, authorization, stringValues} = require('./lib/helpers')
+const {authorization} = require('./lib/helpers')
+const {filePath, stringValues} = require('./lib/helper/strings')
 
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
