@@ -115,5 +115,18 @@ wa.create({
     // untuk kirim video set chrome exe
     useChrome: true,
     autoRefresh: true,
-    sessionId: 'inori'
+    sessionId: 'inori',
+    killProcessOnBrowserClose: true,
+    cacheEnabled: false,
+    chromiumArgs: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--aggressive-cache-discard',
+        '--disable-cache',
+        '--disable-application-cache',
+        '--disable-offline-load-stale-cache',
+        '--disk-cache-size=0',
+        '--disable-gpu',
+        '--disable-dev-shm-usage'
+    ]
 }).then((client) => start(client))
