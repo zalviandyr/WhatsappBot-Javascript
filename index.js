@@ -5,9 +5,8 @@ const fs = require('fs')
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
-const functionResponse = require('./lib/functionResponse')
-const {authorization} = require('./lib/helpers')
-const {filePath, stringValues} = require('./lib/helper/strings')
+const {filePath} = require('./lib/helper/strings')
+const {checkState} = require('./lib/helper/authorization')
 
 // config
 const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
@@ -27,26 +26,13 @@ const start = async (client) => {
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
             // check state
-            authorization.checkState(client, message)
-                .then(async (state) => {
-                    if (state === stringValues.state.started) {
-                        await messageHandler(client, message)
-                    } else {
-                        await client.reply(message.from, messageResponse.state.paused, message.id)
-                    }
-                })
-                .catch(async (err) => {
-                    if (err) {
-                        await client.reply(message.from, messageResponse.state.notRegistered, message.id)
-                    } else {
-                        const messages = message.body.split(' ')
-                        const args = messages.slice(1, messages.length)
-                        await functionResponse.request(client, message, args)
-                    }
+            checkState(client, message)
+                .then(async () => {
+                    await messageHandler(client, message)
                 })
         } else {
             // chat private for check status bot
-            if (message.from === config.ownerNumber) {
+            if (message.from === config['ownerNumber']) {
                 await messageHandler(client, message)
             } else {
                 await client.sendText(message.from, messageResponse.privateMessage)
@@ -57,8 +43,7 @@ const start = async (client) => {
     // listening on added to group
     await client.onAddedToGroup(async (chat) => {
         const groupMember = chat.groupMetadata.participants.length
-        // todo ubah ke 10 participants
-        if (groupMember < 20) {
+        if (groupMember < 10) {
             await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
                 .then(() => {
                     client.leaveGroup(chat.id)
@@ -116,7 +101,6 @@ wa.create({
     useChrome: true,
     autoRefresh: true,
     sessionId: 'inori',
-    killProcessOnBrowserClose: true,
     cacheEnabled: false,
     chromiumArgs: [
         '--no-sandbox',
