@@ -102,6 +102,7 @@ wa.create({
     autoRefresh: true,
     sessionId: 'inori',
     cacheEnabled: false,
+    killProcessOnBrowserClose: true,
     chromiumArgs: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
