@@ -5,6 +5,7 @@ const fs = require('fs')
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
+const functionOwnerResponse = require('./lib/functionOwnerResponse')
 const {filePath} = require('./lib/helper/strings')
 const {checkState} = require('./lib/helper/authorization')
 
@@ -49,7 +50,15 @@ const start = async (client) => {
                     client.leaveGroup(chat.id)
                 })
         } else {
-            await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
+            // add stated started
+            const groupId = chat.id
+            const groupName = chat.formattedTitle
+            const ownerNumber = config['ownerNumber']
+            const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
+            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`)
+                .then(async () => {
+                    await functionOwnerResponse.stateOnAddedToGroup(client, message)
+                })
             // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
             // await client.getAllGroups().then(async (chats) => {
