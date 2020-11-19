@@ -14,19 +14,14 @@
   "author": "Zukron Alviandy R",
   "license": "ISC",
   "dependencies": {
-    "@k3rn31p4nic/google-translate-api": "^1.1.1",
     "@open-wa/wa-automate": "^3.0.14",
     "@open-wa/wa-decrypt": "^2.0.1",
-    "akaneko": "^3.5.1",
     "axios": "^0.21.0",
     "cheerio": "^1.0.0-rc.3",
-    "fbvideos": "^1.0.2",
     "file-type": "^16.0.1",
     "fs": "0.0.1-security",
     "instagram-scraping": "^1.0.13",
     "node-fetch": "^2.6.1",
-    "trev": "^2.0.8",
-    "user-instagram": "^2.1.3",
     "ytdl-core": "^4.0.3"
   }
 }
