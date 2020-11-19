@@ -24,7 +24,6 @@
     "file-type": "^16.0.1",
     "fs": "0.0.1-security",
     "instagram-scraping": "^1.0.13",
-    "js-yaml": "^3.14.0",
     "node-fetch": "^2.6.1",
     "trev": "^2.0.8",
     "user-instagram": "^2.1.3",

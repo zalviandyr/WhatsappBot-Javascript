@@ -1,16 +1,12 @@
 const wa = require('@open-wa/wa-automate')
-const yaml = require('js-yaml')
 const fs = require('fs')
 
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
 const functionOwnerResponse = require('./lib/functionOwnerResponse')
-const {filePath} = require('./lib/helper/strings')
+const {filePath, stringValues} = require('./lib/helper/strings')
 const {checkState} = require('./lib/helper/authorization')
-
-// config
-const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
 
 const start = async (client) => {
     // create delete path
@@ -33,7 +29,7 @@ const start = async (client) => {
                 })
         } else {
             // chat private for check status bot
-            if (message.from === config['ownerNumber']) {
+            if (message.from === stringValues.ownerNumber) {
                 await messageHandler(client, message)
             } else {
                 await client.sendText(message.from, messageResponse.privateMessage)
@@ -53,7 +49,7 @@ const start = async (client) => {
             // add state started
             const groupId = chat.id
             const groupName = chat.formattedTitle
-            const ownerNumber = config['ownerNumber']
+            const ownerNumber = stringValues.ownerNumber
             const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
             await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`)
                 .then(async () => {
