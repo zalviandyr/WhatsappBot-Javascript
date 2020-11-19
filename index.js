@@ -50,7 +50,7 @@ const start = async (client) => {
                     client.leaveGroup(chat.id)
                 })
         } else {
-            // add stated started
+            // add state started
             const groupId = chat.id
             const groupName = chat.formattedTitle
             const ownerNumber = config['ownerNumber']
@@ -59,6 +59,7 @@ const start = async (client) => {
                 .then(async () => {
                     await functionOwnerResponse.stateOnAddedToGroup(client, message)
                 })
+
             // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
             // await client.getAllGroups().then(async (chats) => {
