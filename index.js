@@ -1,16 +1,12 @@
 const wa = require('@open-wa/wa-automate')
-const yaml = require('js-yaml')
 const fs = require('fs')
 
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
-const functionResponse = require('./lib/functionResponse')
-const {authorization} = require('./lib/helpers')
+const functionOwnerResponse = require('./lib/functionOwnerResponse')
 const {filePath, stringValues} = require('./lib/helper/strings')
-
-// config
-const config = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'))
+const {checkState} = require('./lib/helper/authorization')
 
 const start = async (client) => {
     // create delete path
@@ -27,26 +23,13 @@ const start = async (client) => {
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
             // check state
-            authorization.checkState(client, message)
-                .then(async (state) => {
-                    if (state === stringValues.state.started) {
-                        await messageHandler(client, message)
-                    } else {
-                        await client.reply(message.from, messageResponse.state.paused, message.id)
-                    }
-                })
-                .catch(async (err) => {
-                    if (err) {
-                        await client.reply(message.from, messageResponse.state.notRegistered, message.id)
-                    } else {
-                        const messages = message.body.split(' ')
-                        const args = messages.slice(1, messages.length)
-                        await functionResponse.request(client, message, args)
-                    }
+            checkState(client, message)
+                .then(async () => {
+                    await messageHandler(client, message)
                 })
         } else {
             // chat private for check status bot
-            if (message.from === config.ownerNumber) {
+            if (message.from === stringValues.ownerNumber) {
                 await messageHandler(client, message)
             } else {
                 await client.sendText(message.from, messageResponse.privateMessage)
@@ -57,14 +40,22 @@ const start = async (client) => {
     // listening on added to group
     await client.onAddedToGroup(async (chat) => {
         const groupMember = chat.groupMetadata.participants.length
-        // todo ubah ke 10 participants
-        if (groupMember < 20) {
+        if (groupMember < 10) {
             await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
                 .then(() => {
                     client.leaveGroup(chat.id)
                 })
         } else {
-            await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
+            // add state started
+            const groupId = chat.id
+            const groupName = chat.formattedTitle
+            const ownerNumber = stringValues.ownerNumber
+            const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
+            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`)
+                .then(async () => {
+                    await functionOwnerResponse.stateOnAddedToGroup(client, message)
+                })
+
             // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
             // await client.getAllGroups().then(async (chats) => {
@@ -115,5 +106,18 @@ wa.create({
     // untuk kirim video set chrome exe
     useChrome: true,
     autoRefresh: true,
-    sessionId: 'inori'
+    sessionId: 'inori',
+    cacheEnabled: false,
+    killProcessOnBrowserClose: true,
+    chromiumArgs: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--aggressive-cache-discard',
+        '--disable-cache',
+        '--disable-application-cache',
+        '--disable-offline-load-stale-cache',
+        '--disk-cache-size=0',
+        '--disable-gpu',
+        '--disable-dev-shm-usage'
+    ]
 }).then((client) => start(client))
