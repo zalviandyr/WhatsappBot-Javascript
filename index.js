@@ -51,7 +51,7 @@ const start = async (client) => {
             const groupName = chat.formattedTitle
             const ownerNumber = stringValues.ownerNumber
             const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
-            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`)
+            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik !help untuk melihat menu master`)
                 .then(async () => {
                     await functionOwnerResponse.stateOnAddedToGroup(client, message)
                 })
@@ -88,14 +88,6 @@ const start = async (client) => {
  * jika server dihidupkan kembali
  */
 function createDeletePath() {
-    // delete path and recreate temp-media
-    fs.rmdirSync(filePath.tempMedia.base, {recursive: true})
-    fs.mkdirSync(filePath.tempMedia.base, {recursive: true})
-
-    // create temp-media child directory
-    fs.mkdirSync(filePath.tempMedia.instagram)
-    fs.mkdirSync(filePath.tempMedia.youtube)
-
     // create json and log path, recursive to ignore error
     fs.mkdirSync(filePath.json.base, {recursive: true})
     fs.mkdirSync(filePath.log.base, {recursive: true})
