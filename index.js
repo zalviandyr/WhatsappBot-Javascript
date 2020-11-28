@@ -51,7 +51,7 @@ const start = async (client) => {
             const groupName = chat.formattedTitle
             const ownerNumber = stringValues.ownerNumber
             const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
-            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik !help untuk melihat menu master`)
+            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik *!help* untuk melihat menu master`)
                 .then(async () => {
                     await functionOwnerResponse.stateOnAddedToGroup(client, message)
                 })
