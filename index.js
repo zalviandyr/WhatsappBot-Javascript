@@ -62,14 +62,14 @@ const start = async (client) => {
             //     const allGroup = chats.length
             //     // artinya hanya 3 group yn bisa ditangani
             //     if (allGroup > 3) {
-            //         await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
+            //       :  await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
             //             .then(() => {
             //                 client.leaveGroup(chat.id)
             //             })
             //     } else {
             //         // jika berhasil masuk
-            //         await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
-            //     }
+            //         await client.sendTddext(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
+            //     }:
             // })
         }
     })
