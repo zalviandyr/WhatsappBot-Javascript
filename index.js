@@ -19,6 +19,7 @@ const start = async (client) => {
                 client.cutMsgCache()
             }
         })
+        await filterContact(client, message)
 
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
@@ -113,3 +114,28 @@ wa.create({
         '--disable-dev-shm-usage'
     ]
 }).then((client) => start(client))
+
+async function filterContact(client, message) {
+    if (message.isGroupMsg) { // auto out jika banya nomor +62 tidak diatas 80%
+        const groupId = message.from
+        const members = await client.getGroupMembers(groupId)
+        const noID = []
+        members.forEach(((value) => {
+            if (value.id.startsWith('62')) {
+                noID.push(value.id)
+            }
+        }))
+
+        const percentage = (noID.length/members.length) * 100
+        if (percentage < 80) {
+            await client.sendText(groupId, 'Bye bye master')
+            await client.leaveGroup(groupId)
+        }
+    } else { // autos block jika private message tidak dari +62
+        const contactId = message.from
+        if (!contactId.startsWith('62')) {
+            await client.sendText(contactId, 'Bye bye master')
+            await client.contactBlock(contactId)
+        }
+    }
+}
