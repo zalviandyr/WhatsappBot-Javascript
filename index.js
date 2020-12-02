@@ -4,9 +4,7 @@ const fs = require('fs')
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
-const functionOwnerResponse = require('./lib/functionOwnerResponse')
 const {filePath, stringValues} = require('./lib/helper/strings')
-const {checkState} = require('./lib/helper/authorization')
 
 const start = async (client) => {
     // create delete path
@@ -23,11 +21,7 @@ const start = async (client) => {
 
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
-            // check state
-            checkState(client, message)
-                .then(async () => {
-                    await messageHandler(client, message)
-                })
+            await messageHandler(client, message)
         } else {
             // chat private for check status bot
             if (message.from === stringValues.ownerNumber) {
@@ -47,15 +41,9 @@ const start = async (client) => {
                     client.leaveGroup(chat.id)
                 })
         } else {
-            // add state started
-            const groupId = chat.id
-            const groupName = chat.formattedTitle
             const ownerNumber = stringValues.ownerNumber
-            const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
             await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik *!help* untuk melihat menu master`)
-                .then(async () => {
-                    await functionOwnerResponse.stateOnAddedToGroup(client, message)
-                })
+            await client.sendText(ownerNumber, `‼ Inori join ke group *${chat.formattedTitle}*`)
 
             // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
@@ -126,7 +114,7 @@ async function filterContact(client, message) {
             }
         }))
 
-        const percentage = (noID.length/members.length) * 100
+        const percentage = (noID.length / members.length) * 100
         if (percentage < 80) {
             await client.sendText(groupId, 'Bye bye master')
             await client.leaveGroup(groupId)
