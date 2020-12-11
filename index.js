@@ -44,7 +44,8 @@ const start = async (client) => {
             // jika member terpenuhi
             const groups = await client.getAllGroups()
             const allGroup = groups.length
-            // artinya hanya 3 group yn bisa ditangani
+
+            // artinya hanya 20 group yang bisa ditangani
             if (allGroup > 20) {
                 let result = 'Mohon maaf tidak terima slot master\n'
                 result += 'Saya sudah puas dipake\n\n'
