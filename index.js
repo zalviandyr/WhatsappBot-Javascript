@@ -34,41 +34,42 @@ const start = async (client) => {
 
     // listening on added to group
     await client.onAddedToGroup(async (chat) => {
+        const groupId = chat.id.toString()
         const groupMember = chat.groupMetadata.participants.length
+
         if (groupMember < 10) {
             await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
-                .then(() => {
-                    client.leaveGroup(chat.id)
-                })
+            await client.leaveGroup(chat.id)
         } else {
+            // send message to owner
             const ownerNumber = stringValues.ownerNumber
-            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik *!help* untuk melihat menu master`)
             await client.sendText(ownerNumber, `‼ Inori join ke group *${chat.formattedTitle}*`)
 
-            // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
-            // await client.getAllGroups().then(async (chats) => {
-            //     const allGroup = chats.length
-            //     // artinya hanya 3 group yn bisa ditangani
-            //     if (allGroup > 3) {
-            //       :  await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
-            //             .then(() => {
-            //                 client.leaveGroup(chat.id)
-            //             })
-            //     } else {
-            //         // jika berhasil masuk
-            //         await client.sendTddext(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
-            //     }:
-            // })
+            await client.getAllGroups().then(async (chats) => {
+                const allGroup = chats.length
+                // artinya hanya 3 group yn bisa ditangani
+                if (allGroup > 20) {
+                    let result = 'Mohon maaf tidak terima slot master\n'
+                    result += 'Saya sudah puas dipake\n\n'
+                    result += '*Max. 20 Group*'
+                    await client.sendText(groupId, result)
+                    await client.leaveGroup(groupId)
+                } else {
+                    // jika berhasil masuk
+                    let result = `Hallo master master di group *${chat.formattedTitle}*\n`
+                    result += 'Semoga saya dipake dengan benar\n\n'
+                    result += 'Silahkan ketik *!help* untuk melihat menu master atau *!tutorial*'
+                    await client.sendText(groupId, result)
+                }
+            })
         }
     })
 
     // listening on incoming call
     await client.onIncomingCall(async (call) => {
         await client.sendText(call.peerJid, messageResponse.incomingCall)
-            .then(() => {
-                client.contactBlock(call.peerJid)
-            })
+        await client.contactBlock(call.peerJid)
     })
 }
 
