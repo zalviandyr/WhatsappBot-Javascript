@@ -4,9 +4,7 @@ const fs = require('fs')
 // my library
 const messageHandler = require('./lib/messageHandler')
 const messageResponse = require('./lib/messageResponse')
-const functionOwnerResponse = require('./lib/functionOwnerResponse')
 const {filePath, stringValues} = require('./lib/helper/strings')
-const {checkState} = require('./lib/helper/authorization')
 
 const start = async (client) => {
     // create delete path
@@ -19,14 +17,11 @@ const start = async (client) => {
                 client.cutMsgCache()
             }
         })
+        await filterContact(client, message)
 
         // check ini pesan group atau tidak
         if (message.isGroupMsg) {
-            // check state
-            checkState(client, message)
-                .then(async () => {
-                    await messageHandler(client, message)
-                })
+            await messageHandler(client, message)
         } else {
             // chat private for check status bot
             if (message.from === stringValues.ownerNumber) {
@@ -39,47 +34,41 @@ const start = async (client) => {
 
     // listening on added to group
     await client.onAddedToGroup(async (chat) => {
+        const groupId = chat.id.toString()
         const groupMember = chat.groupMetadata.participants.length
+
         if (groupMember < 10) {
             await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
-                .then(() => {
-                    client.leaveGroup(chat.id)
-                })
+            await client.leaveGroup(chat.id)
         } else {
-            // add state started
-            const groupId = chat.id
-            const groupName = chat.formattedTitle
-            const ownerNumber = stringValues.ownerNumber
-            const message = {from: ownerNumber, name: groupName, groupId: groupId, state: 'started'}
-            await client.sendText(chat.id.toString(), `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar\nSilahkan ketik !help untuk melihat menu master`)
-                .then(async () => {
-                    await functionOwnerResponse.stateOnAddedToGroup(client, message)
-                })
-
-            // todo mungkin feature ini harus dipake lagi
             // jika member terpenuhi
-            // await client.getAllGroups().then(async (chats) => {
-            //     const allGroup = chats.length
-            //     // artinya hanya 3 group yn bisa ditangani
-            //     if (allGroup > 3) {
-            //         await client.sendText(chat.id, 'Mohon maaf tidak terima slot master,\nsaya dh puas dipake',)
-            //             .then(() => {
-            //                 client.leaveGroup(chat.id)
-            //             })
-            //     } else {
-            //         // jika berhasil masuk
-            //         await client.sendText(chat.id, `Hallo master master di group *${chat.formattedTitle}*\nsemoga saya dipake dengan benar`,)
-            //     }
-            // })
+            const groups = await client.getAllGroups()
+            const allGroup = groups.length
+            // artinya hanya 3 group yn bisa ditangani
+            if (allGroup > 20) {
+                let result = 'Mohon maaf tidak terima slot master\n'
+                result += 'Saya sudah puas dipake\n\n'
+                result += '*Max. 20 Group*'
+                await client.sendText(groupId, result)
+                await client.leaveGroup(groupId)
+            } else {
+                // jika berhasil masuk
+                let result = `Hallo master master di group *${chat.formattedTitle}*\n`
+                result += 'Semoga saya dipake dengan benar\n\n'
+                result += 'Silahkan ketik *!help* untuk melihat menu master atau *!tutorial*'
+                await client.sendText(groupId, result)
+
+                // send message to owner
+                const ownerNumber = stringValues.ownerNumber
+                await client.sendText(ownerNumber, `‼ Inori join ke group *${chat.formattedTitle}*`)
+            }
         }
     })
 
     // listening on incoming call
     await client.onIncomingCall(async (call) => {
         await client.sendText(call.peerJid, messageResponse.incomingCall)
-            .then(() => {
-                client.contactBlock(call.peerJid)
-            })
+        await client.contactBlock(call.peerJid)
     })
 }
 
@@ -113,3 +102,28 @@ wa.create({
         '--disable-dev-shm-usage'
     ]
 }).then((client) => start(client))
+
+async function filterContact(client, message) {
+    if (message.isGroupMsg) { // auto out jika banya nomor +62 tidak diatas 80%
+        const groupId = message.from
+        const members = await client.getGroupMembers(groupId)
+        const noID = []
+        members.forEach(((value) => {
+            if (value.id.startsWith('62')) {
+                noID.push(value.id)
+            }
+        }))
+
+        const percentage = (noID.length / members.length) * 100
+        if (percentage < 80) {
+            await client.sendText(groupId, 'Bye bye master')
+            await client.leaveGroup(groupId)
+        }
+    } else { // autos block jika private message tidak dari +62
+        const contactId = message.from
+        if (!contactId.startsWith('62')) {
+            await client.sendText(contactId, 'Bye bye master')
+            await client.contactBlock(contactId)
+        }
+    }
+}
