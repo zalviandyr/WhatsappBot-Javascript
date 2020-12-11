@@ -41,28 +41,27 @@ const start = async (client) => {
             await client.sendText(chat.id.toString(), messageResponse.lessParticipants)
             await client.leaveGroup(chat.id)
         } else {
-            // send message to owner
-            const ownerNumber = stringValues.ownerNumber
-            await client.sendText(ownerNumber, `‼ Inori join ke group *${chat.formattedTitle}*`)
-
             // jika member terpenuhi
-            await client.getAllGroups().then(async (chats) => {
-                const allGroup = chats.length
-                // artinya hanya 3 group yn bisa ditangani
-                if (allGroup > 20) {
-                    let result = 'Mohon maaf tidak terima slot master\n'
-                    result += 'Saya sudah puas dipake\n\n'
-                    result += '*Max. 20 Group*'
-                    await client.sendText(groupId, result)
-                    await client.leaveGroup(groupId)
-                } else {
-                    // jika berhasil masuk
-                    let result = `Hallo master master di group *${chat.formattedTitle}*\n`
-                    result += 'Semoga saya dipake dengan benar\n\n'
-                    result += 'Silahkan ketik *!help* untuk melihat menu master atau *!tutorial*'
-                    await client.sendText(groupId, result)
-                }
-            })
+            const groups = await client.getAllGroups()
+            const allGroup = groups.length
+            // artinya hanya 3 group yn bisa ditangani
+            if (allGroup > 20) {
+                let result = 'Mohon maaf tidak terima slot master\n'
+                result += 'Saya sudah puas dipake\n\n'
+                result += '*Max. 20 Group*'
+                await client.sendText(groupId, result)
+                await client.leaveGroup(groupId)
+            } else {
+                // jika berhasil masuk
+                let result = `Hallo master master di group *${chat.formattedTitle}*\n`
+                result += 'Semoga saya dipake dengan benar\n\n'
+                result += 'Silahkan ketik *!help* untuk melihat menu master atau *!tutorial*'
+                await client.sendText(groupId, result)
+
+                // send message to owner
+                const ownerNumber = stringValues.ownerNumber
+                await client.sendText(ownerNumber, `‼ Inori join ke group *${chat.formattedTitle}*`)
+            }
         }
     })
 
