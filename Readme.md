@@ -14,9 +14,12 @@
 
 ## **Usage**
 
-```bash
-> npm start
-```
+- Run code
+    ```bash
+    > npm start
+    ```
+- Menu `!help`
+- Menu owner `!helpowner` 
 
 ## **Troubleshooting**
 
